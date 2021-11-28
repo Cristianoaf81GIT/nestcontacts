@@ -1,4 +1,14 @@
-import { Table, Column, Model, DataType } from 'sequelize-typescript';
+import { Exclude, Transform } from 'class-transformer';
+import {
+  Table,
+  Column,
+  Model,
+  DataType,
+  DeletedAt,
+  UpdatedAt,
+  CreatedAt,
+} from 'sequelize-typescript';
+import { date2TzStringDate } from '../../../utils/timestamps.formatter';
 
 @Table({
   paranoid: true,
@@ -24,4 +34,16 @@ export class Contact extends Model {
 
   @Column({ type: DataType.STRING, allowNull: true })
   avatar: string;
+
+  @CreatedAt
+  @Transform(date2TzStringDate)
+  public createdAt: Date;
+
+  @UpdatedAt
+  @Transform(date2TzStringDate)
+  public updatedAt: Date;
+
+  @DeletedAt
+  @Transform(date2TzStringDate)
+  public deletedAt: Date;
 }

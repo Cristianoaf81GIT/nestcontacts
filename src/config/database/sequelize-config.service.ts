@@ -18,6 +18,7 @@ export class SequelizeConfigService implements SequelizeOptionsFactory {
       autoLoadModels: Boolean(process.env.AUTOLOAD),
       logging: this.logger.verbose,
       storage: process.env.STORAGE,
+
       models: [`${__dirname}/../../../../modules/**/entities/*.entity.ts`],
     };
   }
