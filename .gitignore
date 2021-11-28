@@ -38,7 +38,8 @@ lerna-debug.log*
 .env
 
 # UPLOADS - folder
-./uploads
+./uploads/*.*
+/uploads
 
 # SQLITE
 *.sqlite
