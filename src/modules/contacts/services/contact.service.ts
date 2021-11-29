@@ -3,6 +3,8 @@ import { InjectModel } from '@nestjs/sequelize';
 import { ContactDTO } from '../dtos/contact.dto';
 import { Contact } from '../entities/contact.entity';
 import { attributes } from '../config/model.attributes';
+import { ContactPaginatedQuery } from '../dtos/contact.paginated.query';
+import { ContactPaginatedResponse } from './interfaces/contact.paginated.response';
 
 @Injectable()
 export class ContactService {
@@ -24,8 +26,14 @@ export class ContactService {
     });
   }
 
-  async getAll(): Promise<Contact[]> {
-    return this.ContactModel.findAll({
+  async getAll(
+    params: ContactPaginatedQuery,
+  ): Promise<ContactPaginatedResponse> {
+    if (!params.limit && !params.offset)
+      throw new BadRequestException('params: limit and offset is mandatory!');
+    return this.ContactModel.findAndCountAll({
+      limit: params.limit,
+      offset: params.offset,
       attributes,
     });
   }

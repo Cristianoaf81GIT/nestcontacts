@@ -1,7 +1,9 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ContactDTO } from '../../dtos/contact.dto';
+import { ContactPaginatedQuery } from '../../dtos/contact.paginated.query';
 import { Contact } from '../../entities/contact.entity';
 import { ContactService } from '../../services/contact.service';
+import { ContactPaginatedResponse } from '../../services/interfaces/contact.paginated.response';
 
 @Controller('contacts')
 export class ContactsController {
@@ -12,7 +14,9 @@ export class ContactsController {
   }
 
   @Get()
-  async getAll(): Promise<Contact[]> {
-    return this.contactService.getAll();
+  async getAll(
+    @Query() params: ContactPaginatedQuery,
+  ): Promise<ContactPaginatedResponse> {
+    return this.contactService.getAll(params);
   }
 }
