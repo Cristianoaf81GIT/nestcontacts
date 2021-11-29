@@ -1,4 +1,4 @@
-export interface ContactPaginatedResponse {
+export interface PaginatedResponse {
   count: number;
   rows: Array<Record<string, any>>;
 }

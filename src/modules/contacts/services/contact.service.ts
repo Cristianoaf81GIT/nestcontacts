@@ -4,7 +4,7 @@ import { ContactDTO } from '../dtos/contact.dto';
 import { Contact } from '../entities/contact.entity';
 import { attributes } from '../config/model.attributes';
 import { ContactPaginatedQuery } from '../dtos/contact.paginated.query';
-import { ContactPaginatedResponse } from './interfaces/contact.paginated.response';
+import { PaginatedResponse } from '../../../utils/paginated.response';
 
 @Injectable()
 export class ContactService {
@@ -26,9 +26,7 @@ export class ContactService {
     });
   }
 
-  async getAll(
-    params: ContactPaginatedQuery,
-  ): Promise<ContactPaginatedResponse> {
+  async getAll(params: ContactPaginatedQuery): Promise<PaginatedResponse> {
     if (!params.limit && !params.offset)
       throw new BadRequestException('params: limit and offset is mandatory!');
     return this.ContactModel.findAndCountAll({
