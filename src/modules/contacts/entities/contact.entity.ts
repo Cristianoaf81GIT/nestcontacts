@@ -1,4 +1,4 @@
-import { Exclude, Transform } from 'class-transformer';
+import { Transform } from 'class-transformer';
 import {
   Table,
   Column,
@@ -7,8 +7,11 @@ import {
   DeletedAt,
   UpdatedAt,
   CreatedAt,
+  BelongsToMany,
 } from 'sequelize-typescript';
+import { User } from '../../users/entities/user.entity';
 import { date2TzStringDate } from '../../../utils/timestamps.formatter';
+import { UserContact } from 'src/modules/users/entities/userContact.entity';
 
 @Table({
   paranoid: true,
@@ -34,6 +37,9 @@ export class Contact extends Model {
 
   @Column({ type: DataType.STRING, allowNull: true })
   avatar: string;
+
+  @BelongsToMany(() => User, () => UserContact)
+  user: User;
 
   @CreatedAt
   @Transform(date2TzStringDate)
