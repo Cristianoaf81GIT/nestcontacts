@@ -19,4 +19,8 @@ export class UsersService {
       throw new BadRequestException('user already exists');
     return this.UserModel.create(userDto);
   }
+
+  async getUser(email: string): Promise<User> {
+    return await this.UserModel.findOne({ where: { email } });
+  }
 }
