@@ -3,9 +3,11 @@ import {
   Post,
   Query,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { JwtAuthGuard } from '../../auth/strategies/jwt-auth.guard';
 import { CustomParseIntPipe } from '../pipes/custom-parseInt.pipe';
 import { UploadsService } from '../services/uploads.service';
 
@@ -15,6 +17,7 @@ export class UploadfilesController {
 
   @Post()
   @UseInterceptors(FileInterceptor('image'))
+  @UseGuards(JwtAuthGuard)
   uploadUserContactAvatar(
     @Query('id', CustomParseIntPipe) id: number,
     @UploadedFile() file: Express.Multer.File,

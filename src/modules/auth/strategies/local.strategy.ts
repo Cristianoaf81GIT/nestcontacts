@@ -25,7 +25,6 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     this.logger.verbose(`user with email found: ${JSON.stringify(user.email)}`);
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new BadRequestException('Wrong password!');
-
     return user;
   }
 }
