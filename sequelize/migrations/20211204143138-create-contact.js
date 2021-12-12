@@ -23,6 +23,14 @@ module.exports = {
         allowNull: false,
       },
 
+      email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: true,
+        },
+      },
+
       avatar: {
         type: Sequelize.STRING,
         allowNull: true,

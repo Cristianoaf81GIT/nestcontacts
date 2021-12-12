@@ -21,6 +21,15 @@ export class UsersService {
   }
 
   async getUser(email: string): Promise<User> {
-    return await this.UserModel.findOne({ where: { email } });
+    return await this.UserModel.findOne({
+      where: { email },
+    });
+  }
+
+  async getUserById(id: number): Promise<User> {
+    return await this.UserModel.findOne({
+      where: { id },
+      include: ['contacts'],
+    });
   }
 }

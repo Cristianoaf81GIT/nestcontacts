@@ -10,5 +10,6 @@ import { User } from '../users/entities/user.entity';
   imports: [SequelizeModule.forFeature([Contact, User, UserContact])],
   providers: [ContactService],
   controllers: [ContactsController],
+  exports: [ContactService],
 })
 export class ContactsModule {}

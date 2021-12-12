@@ -1,7 +1,9 @@
 import {
   Controller,
+  Param,
   Post,
   Query,
+  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -12,16 +14,21 @@ import { CustomParseIntPipe } from '../pipes/custom-parseInt.pipe';
 import { UploadsService } from '../services/uploads.service';
 
 @Controller('uploadfiles')
+@UseGuards(JwtAuthGuard)
 export class UploadfilesController {
   constructor(private uploadsService: UploadsService) {}
 
-  @Post()
+  @Post('avatar/:contactId')
   @UseInterceptors(FileInterceptor('image'))
-  @UseGuards(JwtAuthGuard)
   uploadUserContactAvatar(
-    @Query('id', CustomParseIntPipe) id: number,
+    @Param('contactId', CustomParseIntPipe) contactId: number,
+    @Request() req,
     @UploadedFile() file: Express.Multer.File,
-  ): Record<string, string> {
-    return this.uploadsService.handleUploadAvatarFile(id, file);
+  ): Promise<any> {
+    return this.uploadsService.handleUploadAvatarFile(
+      req.user.userId,
+      contactId,
+      file,
+    );
   }
 }

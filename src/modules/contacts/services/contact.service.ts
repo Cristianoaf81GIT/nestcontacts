@@ -18,10 +18,7 @@ export class ContactService {
     @InjectModel(UserContact) private UserContactModel: typeof UserContact,
   ) {}
 
-  async create(
-    contactDTO: ContactDTO,
-    userId: number,
-  ): Promise<Contact | void> {
+  async create(contactDTO: ContactDTO, userId: number): Promise<Contact> {
     const userExists = await this.UserModel.findOne({
       where: { id: userId },
       include: ['contacts'],
@@ -31,8 +28,9 @@ export class ContactService {
       throw new BadRequestException(`user with id: ${userId} does not exists`);
 
     const contactAlreadyExists = [];
+    userExists.contacts.forEach((c) => console.log(JSON.stringify(c)));
     userExists.contacts.forEach((contact) => {
-      if (contact.email === contactDTO.email) {
+      if (contact && contact.email && contact.email === contactDTO.email) {
         contactAlreadyExists.push(contact);
       }
     });
@@ -45,9 +43,25 @@ export class ContactService {
     }
     this.logger.verbose(`a new contact is arriving: ${contactDTO.email}`);
 
+    const currentContact = await this.ContactModel.findOne({
+      where: {
+        email: contactDTO.email,
+        phone: contactDTO.phone,
+        name: contactDTO.name,
+      },
+    });
+
+    if (currentContact && currentContact.id) {
+      await this.UserContactModel.create({
+        userId: userId,
+        contactId: currentContact.id,
+      });
+      return currentContact;
+    }
+
     const newContact = await this.ContactModel.create(contactDTO);
     await this.UserContactModel.create({
-      userId: userExists.id,
+      userId: userId,
       contactId: newContact.id,
     });
     return newContact;
@@ -93,5 +107,9 @@ export class ContactService {
 
   async getContactByEmail(email: string): Promise<Contact> {
     return this.ContactModel.findOne({ where: { email }, attributes });
+  }
+
+  async getContactById(id: number): Promise<Contact> {
+    return this.ContactModel.findOne({ where: { id }, attributes });
   }
 }
