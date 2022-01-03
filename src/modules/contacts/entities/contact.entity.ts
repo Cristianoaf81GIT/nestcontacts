@@ -11,7 +11,7 @@ import {
 } from 'sequelize-typescript';
 import { User } from '../../users/entities/user.entity';
 import { date2TzStringDate } from '../../../utils/timestamps.formatter';
-import { UserContact } from 'src/modules/users/entities/userContact.entity';
+import { UserContact } from '../../users/entities/userContact.entity';
 
 @Table({
   paranoid: true,

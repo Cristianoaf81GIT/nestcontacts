@@ -9,7 +9,7 @@ import {
   Table,
   UpdatedAt,
 } from 'sequelize-typescript';
-import { date2TzStringDate } from 'src/utils/timestamps.formatter';
+import { date2TzStringDate } from '../../../utils/timestamps.formatter';
 import { Contact } from '../../contacts/entities/contact.entity';
 import { User } from './user.entity';
 
