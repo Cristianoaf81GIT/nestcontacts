@@ -10,7 +10,6 @@ const userDTO: UserDto = {
   password: '123456',
 };
 
-// continua aqui
 describe('UsersController', () => {
   let controller: UsersController;
   let service: UsersService;
