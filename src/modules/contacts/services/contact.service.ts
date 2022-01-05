@@ -6,7 +6,7 @@ import { attributes } from '../config/model.attributes';
 import { ContactPaginatedQuery } from '../dtos/contact.paginated.query';
 import { PaginatedResponse } from '../../../utils/paginated.response';
 import { User } from '../../users/entities/user.entity';
-import { UserContact } from 'src/modules/users/entities/userContact.entity';
+import { UserContact } from '../../users/entities/userContact.entity';
 
 @Injectable()
 export class ContactService {

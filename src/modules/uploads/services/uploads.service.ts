@@ -4,10 +4,8 @@ import {
   Logger,
   PreconditionFailedException,
 } from '@nestjs/common';
-import { InjectModel } from '@nestjs/sequelize';
 import { format } from 'date-fns';
 import { ContactService } from '../../contacts/services/contact.service';
-import { UserContact } from '../../users/entities/userContact.entity';
 import { UsersService } from '../../users/services/users.service';
 
 @Injectable()
@@ -17,7 +15,6 @@ export class UploadsService {
   constructor(
     private userService: UsersService,
     private contactService: ContactService,
-    @InjectModel(UserContact) userContactModel: typeof UserContact,
   ) {}
 
   async handleUploadAvatarFile(
@@ -29,21 +26,18 @@ export class UploadsService {
     if (!file || !file.originalname)
       throw new PreconditionFailedException('Avatar file is required!');
 
-    // find user
     const user = await this.userService.getUserById(userId);
 
     if (!user || !user.id) throw new BadRequestException('user not found');
 
-    // find contact
     const contact = await this.contactService.getContactById(contactId);
     if (!contact || !contact.id)
       throw new BadRequestException('Contact not found!');
 
-    // check if user is owner contact
     user.contacts.forEach((userContact) => {
       if (userContact.id === contactId) userOwnerContact = true;
     });
-    console.log(userOwnerContact, 'o contato é do usuario');
+
     if (!userOwnerContact)
       throw new BadRequestException(
         `you dont have permission to change this contact ${contactId}`,
