@@ -21,7 +21,7 @@ const mockedArgumentMetaData: ArgumentMetadata = {
   type: 'query',
   data: '1',
 };
-
+// continue here
 describe('UploadfilesController', () => {
   let controller: UploadfilesController;
   let service: UploadsService;
@@ -32,7 +32,7 @@ describe('UploadfilesController', () => {
         {
           provide: UploadsService,
           useValue: {
-            handleUploadAvatarFile: jest.fn().mockReturnValue({}),
+            handleUploadAvatarFile: jest.fn(),
           },
         },
       ],
@@ -45,40 +45,5 @@ describe('UploadfilesController', () => {
   it('should be defined', () => {
     expect(controller).toBeDefined();
     expect(service).toBeDefined();
-  });
-
-  it('should upload single file with success', () => {
-    const result = controller.uploadUserContactAvatar(0, mockedMulterFile);
-    expect(result).toEqual({});
-  });
-
-  it('should throw an exception when file parameter is undefined or null', () => {
-    try {
-      jest
-        .spyOn(service, 'handleUploadAvatarFile')
-        .mockImplementationOnce(
-          (_id: number, file: Express.Multer.File): any => {
-            if (!file) throw new PreconditionFailedException();
-          },
-        );
-      controller.uploadUserContactAvatar(1, null);
-    } catch (error) {
-      expect(error).toEqual(new PreconditionFailedException());
-    }
-  });
-
-  it('should throw an exception when user id is negative or zero', () => {
-    jest
-      .spyOn(controller, 'uploadUserContactAvatar')
-      .mockImplementationOnce((_id: number): any => {
-        new CustomParseIntPipe().transform(String(_id), mockedArgumentMetaData);
-      });
-    try {
-      controller.uploadUserContactAvatar(0, null);
-    } catch (error) {
-      expect(error.message).toEqual(
-        'id must be a valid number non negative and greather than zero!',
-      );
-    }
   });
 });
