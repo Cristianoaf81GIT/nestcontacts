@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   Logger,
+  NotFoundException,
   PreconditionFailedException,
 } from '@nestjs/common';
 import { format } from 'date-fns';
@@ -28,11 +29,11 @@ export class UploadsService {
 
     const user = await this.userService.getUserById(userId);
 
-    if (!user || !user.id) throw new BadRequestException('user not found');
+    if (!user || !user.id) throw new NotFoundException('user not found');
 
     const contact = await this.contactService.getContactById(contactId);
     if (!contact || !contact.id)
-      throw new BadRequestException('Contact not found!');
+      throw new NotFoundException('Contact not found!');
 
     user.contacts.forEach((userContact) => {
       if (userContact.id === contactId) userOwnerContact = true;

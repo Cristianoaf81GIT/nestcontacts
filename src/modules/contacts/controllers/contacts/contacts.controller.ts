@@ -7,18 +7,44 @@ import {
   Request,
   UseGuards,
 } from '@nestjs/common';
-import { JwtAuthGuard } from 'src/modules/auth/strategies/jwt-auth.guard';
+import {
+  ApiBadRequestResponse,
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { PaginatedResponse } from '../../../../utils/paginated.response';
 import { ContactDTO } from '../../dtos/contact.dto';
 import { ContactPaginatedQuery } from '../../dtos/contact.paginated.query';
+import { ContactPaginatedResponseDto } from '../../dtos/contact.paginated.response';
+import { ContactResponseDTO } from '../../dtos/contact.response.dto';
 import { Contact } from '../../entities/contact.entity';
 import { ContactService } from '../../services/contact.service';
 
 @Controller('contacts')
+@ApiTags('contacts')
+@ApiBearerAuth()
 @UseGuards(JwtAuthGuard)
 export class ContactsController {
   constructor(private readonly contactService: ContactService) {}
+
   @Post()
+  @ApiOperation({ summary: 'Create a contact' })
+  @ApiCreatedResponse({
+    description: 'success',
+    type: ContactResponseDTO,
+  })
+  @ApiNotFoundResponse({
+    description: 'user with id: [userId] does not exists',
+  })
+  @ApiBadRequestResponse({
+    description: 'contact email already in exists',
+  })
+  @ApiInternalServerErrorResponse({ description: 'Internal server error' })
   async create(
     @Body() contactDto: ContactDTO,
     @Request() req,
@@ -27,6 +53,15 @@ export class ContactsController {
   }
 
   @Get('user')
+  @ApiOperation({ summary: 'Get user contacts paginated' })
+  @ApiBadRequestResponse({
+    description: 'params: limit and offset is mandatory!',
+  })
+  @ApiCreatedResponse({
+    description: 'success',
+    type: ContactPaginatedResponseDto,
+  })
+  @ApiNotFoundResponse({ description: 'user with id: [userId] was not found!' })
   async getAll(
     @Query() params: ContactPaginatedQuery,
     @Request() req,

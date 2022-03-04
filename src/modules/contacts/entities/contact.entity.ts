@@ -52,4 +52,16 @@ export class Contact extends Model {
   @DeletedAt
   @Transform(date2TzStringDate)
   public deletedAt: Date;
+
+  toJSON(): any {
+    return {
+      id: this.id,
+      name: this.name,
+      phone: this.phone,
+      email: this.email,
+      avatar: this.avatar,
+      createdAt: this.createdAt,
+      updatedAt: this.updatedAt,
+    };
+  }
 }

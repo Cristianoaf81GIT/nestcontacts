@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, Logger } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { ContactDTO } from '../dtos/contact.dto';
 import { Contact } from '../entities/contact.entity';
@@ -25,7 +30,7 @@ export class ContactService {
     });
 
     if (!userExists)
-      throw new BadRequestException(`user with id: ${userId} does not exists`);
+      throw new NotFoundException(`user with id: ${userId} does not exists`);
 
     const contactAlreadyExists = [];
     userExists.contacts.forEach((c) => console.log(JSON.stringify(c)));
@@ -80,7 +85,7 @@ export class ContactService {
     });
 
     if (!existingUser) {
-      throw new BadRequestException(`user with id: ${userId} was not found!`);
+      throw new NotFoundException(`user with id: ${userId} was not found!`);
     }
 
     const userContacts = [];
@@ -93,8 +98,9 @@ export class ContactService {
       for (const contact of values.rows) {
         count = values.count;
         const userContact = await this.ContactModel.findOne({
-          where: { id: contact.contactId },
+          where: { id: contact.contactId, deletedAt: null },
         });
+
         userContacts.push(userContact);
       }
     });
