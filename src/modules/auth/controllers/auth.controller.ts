@@ -2,7 +2,6 @@ import { Controller, Post, UseGuards, Request } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
