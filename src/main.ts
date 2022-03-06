@@ -14,12 +14,12 @@ async function bootstrap() {
     .setDescription('Users contact api')
     .setVersion('1.0')
     .addTag('contacts')
-    .addBearerAuth({in: 'header', type: 'http'})
+    .addBearerAuth({ in: 'header', type: 'http' })
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  await app.listen(3000);
+  await app.listen(9000);
 }
 bootstrap();
