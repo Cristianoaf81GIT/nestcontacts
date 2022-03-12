@@ -14,6 +14,7 @@ import {
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
   ApiOperation,
+  ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
@@ -57,7 +58,13 @@ export class ContactsController {
   @ApiBadRequestResponse({
     description: 'params: limit and offset is mandatory!',
   })
-  @ApiCreatedResponse({
+  // @ApiCreatedResponse({
+  //   status: 200,
+  //   description: 'success',
+  //   type: ContactPaginatedResponseDto,
+  // })
+  @ApiResponse({
+    status: 200,
     description: 'success',
     type: ContactPaginatedResponseDto,
   })
