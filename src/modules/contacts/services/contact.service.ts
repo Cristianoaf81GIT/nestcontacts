@@ -33,7 +33,6 @@ export class ContactService {
       throw new NotFoundException(`user with id: ${userId} does not exists`);
 
     const contactAlreadyExists = [];
-    userExists.contacts.forEach((c) => console.log(JSON.stringify(c)));
     userExists.contacts.forEach((contact) => {
       if (contact && contact.email && contact.email === contactDTO.email) {
         contactAlreadyExists.push(contact);
@@ -117,5 +116,12 @@ export class ContactService {
 
   async getContactById(id: number): Promise<Contact> {
     return this.ContactModel.findOne({ where: { id }, attributes });
+  }
+
+  async updateUserAvatar(id: number, fileName: string): Promise<void> {
+    await this.ContactModel.update(
+      { avatar: `http://localhost:9000/${fileName}` },
+      { where: { id } },
+    );
   }
 }

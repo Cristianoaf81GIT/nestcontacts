@@ -1,8 +1,8 @@
 import {
   Controller,
+  Logger,
   Param,
   Post,
-  Query,
   Request,
   UploadedFile,
   UseGuards,
@@ -20,6 +20,7 @@ import {
   ApiOperation,
   ApiPreconditionFailedResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../auth/strategies/jwt-auth.guard';
 import { FileUploadResponseDto } from '../dto/file-upload.response.dto';
@@ -27,10 +28,11 @@ import { CustomParseIntPipe } from '../pipes/custom-parseInt.pipe';
 import { UploadsService } from '../services/uploads.service';
 
 @Controller('uploadfiles')
-@UseGuards(JwtAuthGuard)
-@ApiTags('file-upload')
 @ApiBearerAuth()
+@ApiTags('file-upload')
+@UseGuards(JwtAuthGuard)
 export class UploadfilesController {
+  private logger = new Logger(UploadfilesController.name);
   constructor(private uploadsService: UploadsService) {}
 
   @Post('avatar/:contactId')
@@ -51,12 +53,13 @@ export class UploadfilesController {
   @ApiInternalServerErrorResponse({
     description: 'Internal server error',
   })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiConsumes('multipart/form-data')
   @ApiBody({
     schema: {
       type: 'object',
       properties: {
-        file: {
+        image: {
           type: 'string',
           format: 'binary',
         },

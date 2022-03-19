@@ -36,7 +36,9 @@ export class UploadsService {
       throw new NotFoundException('Contact not found!');
 
     user.contacts.forEach((userContact) => {
-      if (userContact.id === contactId) userOwnerContact = true;
+      if (userContact.id === contactId) {
+        userOwnerContact = true;
+      }
     });
 
     if (!userOwnerContact)
@@ -44,12 +46,16 @@ export class UploadsService {
         `you dont have permission to change this contact ${contactId}`,
       );
 
+    this.contactService.updateUserAvatar(contact.id, file.filename);
+
     this.logger.verbose(
       `file: ${file.originalname} was uploaded, ${format(
         new Date(),
         'yyyy-MM-dd HH:mm:ss.SS',
       )} by userId ${userId}`,
     );
-    return { message: `file: ${file.originalname}, successfully uploaded!` };
+    return {
+      message: `file: [http://localhost:9000/${file.filename}], successfully uploaded!`,
+    };
   }
 }

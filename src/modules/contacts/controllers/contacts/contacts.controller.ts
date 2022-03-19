@@ -16,6 +16,7 @@ import {
   ApiOperation,
   ApiResponse,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../../../auth/strategies/jwt-auth.guard';
 import { PaginatedResponse } from '../../../../utils/paginated.response';
@@ -46,6 +47,7 @@ export class ContactsController {
     description: 'contact email already in exists',
   })
   @ApiInternalServerErrorResponse({ description: 'Internal server error' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async create(
     @Body() contactDto: ContactDTO,
     @Request() req,
@@ -58,17 +60,13 @@ export class ContactsController {
   @ApiBadRequestResponse({
     description: 'params: limit and offset is mandatory!',
   })
-  // @ApiCreatedResponse({
-  //   status: 200,
-  //   description: 'success',
-  //   type: ContactPaginatedResponseDto,
-  // })
   @ApiResponse({
     status: 200,
     description: 'success',
     type: ContactPaginatedResponseDto,
   })
   @ApiNotFoundResponse({ description: 'user with id: [userId] was not found!' })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async getAll(
     @Query() params: ContactPaginatedQuery,
     @Request() req,

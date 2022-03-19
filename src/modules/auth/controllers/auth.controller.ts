@@ -1,7 +1,9 @@
-import { Controller, Post, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, UseGuards, Request, HttpCode } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiBearerAuth,
   ApiBody,
+  ApiHeader,
   ApiInternalServerErrorResponse,
   ApiOkResponse,
   ApiOperation,
@@ -19,8 +21,9 @@ import { LocalAuthGuard } from '../strategies/local.guard';
 export class AuthController {
   constructor(private authService: AuthService) {}
   @Post('user')
+  @HttpCode(200)
   @ApiOperation({ summary: 'User Login' })
-  @ApiOkResponse({ description: 'success', type: AuthResponseDto })
+  @ApiOkResponse({ description: 'success', type: AuthResponseDto, status: 200 })
   @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   @ApiBadRequestResponse({ description: 'Wrong password!' })
   @ApiInternalServerErrorResponse({ description: 'internal server error' })
@@ -32,6 +35,12 @@ export class AuthController {
 
   @Post('refresh/token')
   @UseGuards(JwtUpdateTokenGuard)
+  @ApiHeader({
+    name: 'refresh_token',
+    description: 'user refresh token',
+    allowEmptyValue: false,
+  })
+  @ApiUnauthorizedResponse({ description: 'Unauthorized' })
   async refresh(@Request() req) {
     return this.authService.login(req.user);
   }

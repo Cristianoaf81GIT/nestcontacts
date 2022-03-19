@@ -3,6 +3,7 @@ import { MulterOptionsFactory } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { diskStorage } from 'multer';
 import { Request } from 'express';
+import { getTime } from 'date-fns';
 
 @Injectable()
 export class UploadsServiceConfiguration implements MulterOptionsFactory {
@@ -17,7 +18,7 @@ export class UploadsServiceConfiguration implements MulterOptionsFactory {
         ): void => {
           const name: string = file.originalname.split('.')[0].trim();
           const ext: string = file.originalname.split('.')[1].trim();
-          cb(null, `${name}.${ext}`);
+          cb(null, `${name}-${getTime(new Date())}.${ext}`);
         },
       }),
       limits: {
