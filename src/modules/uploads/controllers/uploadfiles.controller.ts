@@ -36,7 +36,7 @@ export class UploadfilesController {
   constructor(private uploadsService: UploadsService) {}
 
   @Post('avatar/:contactId')
-  @UseInterceptors(FileInterceptor('image'))
+  @UseInterceptors(FileInterceptor('avatar'))
   @ApiOperation({ summary: 'Upload contact avatar' })
   @ApiCreatedResponse({
     description: 'File successfuly uploaded',
@@ -59,7 +59,7 @@ export class UploadfilesController {
     schema: {
       type: 'object',
       properties: {
-        image: {
+        avatar: {
           type: 'string',
           format: 'binary',
         },

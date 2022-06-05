@@ -25,6 +25,7 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload, { expiresIn: tokenExp }),
       refresh_token: this.jwtService.sign(payload, { expiresIn: refreshExp }),
+      user_name: user.fullName,
     };
   }
 
